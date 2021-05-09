@@ -1,0 +1,4 @@
+Readable Stream
+Pada materi sebelumnya Anda sudah mengetahui cara mengakses berkas melalui fungsi fs.readFile(). 
+Fungsi readFile baik versi asynchronous ataupun synchronous, bekerja dengan membaca berkas hingga selesai sebelum mengembalikan data. Itu berarti bila Anda menggunakannya untuk mengakses berkas yang besar, maka akan membutuhkan waktu lama dan memori yang besar untuk mendapatkan hasilnya. 
+Hal ini sungguh tidak efektif.

@@ -1,0 +1,19 @@
+{
+  "name": "latihan-nodejs",
+  "version": "1.0.0",
+  "description": "Latihan nodejs",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "test": "jest",
+    "start": "node ./src/index.js"
+  },
+  "author": "indra muliana",
+  "license": "ISC",
+  "dependencies": {
+    "lodash": "^4.17.21"
+  },
+  "devDependencies": {
+    "jest": "^26.6.3"
+  }
+}

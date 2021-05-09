@@ -1,0 +1,24 @@
+{
+  "name": "nodejs-lanjutan-1",
+  "version": "1.0.0",
+  "description": "Dicoding Modul: Belajar Membuat Aplikasi Back-End",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start-dev": "set NODE_ENV=development node app.js",
+    "start-server": "node ./http-server/basic-server.js",
+    "start-hapi": "node ./hapi-web-server/server.js",
+    "start-nodemon": "nodemon ./notes-app/server.js"
+  },
+  "author": "Indra Muliana",
+  "license": "ISC",
+  "dependencies": {
+    "@hapi/hapi": "^20.1.2",
+    "lodash": "^4.17.21",
+    "moment": "^2.29.1",
+    "nanoid": "^3.1.22"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.7"
+  }
+}
