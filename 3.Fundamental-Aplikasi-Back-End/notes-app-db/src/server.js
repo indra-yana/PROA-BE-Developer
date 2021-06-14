@@ -1,3 +1,5 @@
+require('dotenv').config();
+
 const Hapi = require('@hapi/hapi');
 const notesPlugin = require('./api/notes');
 const NotesService = require('./services/inMemory/NotesServices');
@@ -5,8 +7,8 @@ const NotesValidator = require('./validator/notes');
 
 const init = async () => {
     const server = Hapi.server({
-        port: 5000,
-        host: process.env.NODE_ENV !== 'production' ? 'localhost' : '0.0.0.0',
+        host: process.env.APP_HOST,
+        port: process.env.APP_PORT,
         routes: {
             cors: {
                 origin: ['*'],
