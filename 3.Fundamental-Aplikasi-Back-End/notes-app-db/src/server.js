@@ -5,7 +5,7 @@ const notesPlugin = require('./api/notes');
 const NotesService = require('./services/inMemory/NotesServices');
 const NotesValidator = require('./validator/notes');
 
-const init = async () => {
+const init = async() => {
     const server = Hapi.server({
         host: process.env.APP_HOST,
         port: process.env.APP_PORT,
@@ -17,15 +17,13 @@ const init = async () => {
     });
 
     const notesService = new NotesService();
-    await server.register([
-        {
-            plugin: notesPlugin,
-            options: {
-                service: notesService,
-                validator: NotesValidator,
-            }
-        },
-    ]);
+    await server.register([{
+        plugin: notesPlugin,
+        options: {
+            service: notesService,
+            validator: NotesValidator,
+        }
+    }, ]);
 
     await server.start();
     console.log(`Server running at ${server.info.uri}`);
