@@ -22,7 +22,7 @@ class NotesHandler {
 
             return responseSuccess(h, 'Catatan berhasil ditambahkan', { noteId }, 201);
         } catch (error) {
-            return responseError(error, h);
+            return responseError(h, error);
         }
 
     }
@@ -40,7 +40,7 @@ class NotesHandler {
 
             return responseSuccess(h, 'Catatan berhasil didapatkan', { note });
         } catch (error) {
-            return responseError(error, h);
+            return responseError(h, error);
         }
 
     }
@@ -54,7 +54,7 @@ class NotesHandler {
 
             return responseSuccess(h, 'Catatan berhasil diperbarui');
         } catch (error) {
-            return responseError(error, h);
+            return responseError(h, error);
         }
     }
 
@@ -66,7 +66,7 @@ class NotesHandler {
 
             return responseSuccess(h, 'Catatan berhasil dihapus');
         } catch (error) {
-            return responseError(error, h);
+            return responseError(h, error);
         }
 
     }

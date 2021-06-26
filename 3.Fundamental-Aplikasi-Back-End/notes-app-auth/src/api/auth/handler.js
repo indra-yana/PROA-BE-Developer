@@ -29,7 +29,7 @@ class Authhandler {
                 refreshToken,
             }, 201);
         } catch (error) {
-            return responseError(error, h);
+            return responseError(h, error);
         }
     }
 
@@ -46,7 +46,7 @@ class Authhandler {
 
             return responseSuccess(h, 'Access Token berhasil diperbarui', { accessToken }, 201);
         } catch (error) {
-            return responseError(error, h);
+            return responseError(h, error);
         }
     }
 
@@ -60,7 +60,7 @@ class Authhandler {
 
             return responseSuccess(h, 'Refresh token berhasil dihapus');
         } catch (error) {
-            return responseError(error, h);
+            return responseError(h, error);
         }
     }
 

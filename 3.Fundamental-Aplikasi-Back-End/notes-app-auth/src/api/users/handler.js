@@ -19,7 +19,7 @@ class UsersHandler {
 
             return responseSuccess(h, 'User berhasil ditambahkan', { userId }, 201);
         } catch (error) {
-            return responseError(error, h);
+            return responseError(h, error);
         }
     }
 
@@ -30,7 +30,7 @@ class UsersHandler {
 
             return responseSuccess(h, 'User berhasil didapatkan', { user });
         } catch (error) {
-            return responseError(error, h);
+            return responseError(h, error);
         }
     }
 

@@ -24,7 +24,7 @@ const responseSuccess = (h, message, params = {}, statusCode = 200) => {
     }).code(statusCode);
 }
 
-const responseError = (error, h) => {
+const responseError = (h, error) => {
     if (error instanceof ClientError) {
         return h.response({
             status: 'fail',
