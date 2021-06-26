@@ -39,7 +39,7 @@ class NotesService {
             values: [id],
         });
 
-        if (!result.rows.length) {
+        if (!result.rowCount) {
             throw new NotFoundError('Catatan tidak ditemukan');
         }
 
@@ -53,7 +53,7 @@ class NotesService {
             values: [title, body, tags, updatedAt, id],
         });
 
-        if (!result.rows.length) {
+        if (!result.rowCount) {
             throw new NotFoundError('Gagal memperbarui catatan. Id tidak ditemukan');
         }
     }
@@ -64,7 +64,7 @@ class NotesService {
             values: [id],
         });
 
-        if (!result.rows.length) {
+        if (!result.rowCount) {
             throw new NotFoundError('Catatan gagal dihapus, Id tidak ditemukan');
         }
     }

@@ -27,7 +27,7 @@ class UsersService {
             throw new QueryError({ error: result.error, tags: ['UsersService', 'addUser'] });
         }
 
-        if (!result.rows.length) {
+        if (!result.rowCount) {
             throw new InvariantError('User gagal ditambahkan');
         }
 
@@ -44,7 +44,7 @@ class UsersService {
             throw new QueryError({ error: result.error, tags: ['UsersService', 'getUserById'] });
         }
 
-        if (!result.rows.length) {
+        if (!result.rowCount) {
             throw new NotFoundError('User tidak ditemukan');
         }
 
@@ -61,7 +61,7 @@ class UsersService {
             throw new QueryError({ error: result.error, tags: ['UsersService', 'verifyNewUsername'] });
         }
 
-        if (result.rows.length > 0) {
+        if (result.rowCount > 0) {
             throw new InvariantError('Gagal menambahkan user. Username sudah digunakan');
         }
     }
@@ -76,7 +76,7 @@ class UsersService {
             throw new QueryError({ error: result.error, tags: ['UsersService', 'verifyUserCredential'] });
         }
 
-        if (!result.rows.length) {
+        if (!result.rowCount) {
             throw new AuthError('Kredensial yang Anda berikan salah');
         }
 

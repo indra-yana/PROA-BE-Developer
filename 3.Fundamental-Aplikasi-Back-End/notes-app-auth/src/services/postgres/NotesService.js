@@ -52,7 +52,7 @@ class NotesService {
             throw new QueryError({ error: result.error, tags: ['NotesService', 'getNoteById'] });
         }
 
-        if (!result.rows.length) {
+        if (!result.rowCount) {
             throw new NotFoundError('Catatan tidak ditemukan');
         }
 
@@ -70,7 +70,7 @@ class NotesService {
             throw new QueryError({ error: result.error, tags: ['NotesService', 'editNoteById'] });
         }
 
-        if (!result.rows.length) {
+        if (!result.rowCount) {
             throw new NotFoundError('Gagal memperbarui catatan. Id tidak ditemukan');
         }
     }
@@ -85,7 +85,7 @@ class NotesService {
             throw new QueryError({ error: result.error, tags: ['NotesService', 'deleteNoteById'] });
         }
 
-        if (!result.rows.length) {
+        if (!result.rowCount) {
             throw new NotFoundError('Catatan gagal dihapus, Id tidak ditemukan');
         }
     }

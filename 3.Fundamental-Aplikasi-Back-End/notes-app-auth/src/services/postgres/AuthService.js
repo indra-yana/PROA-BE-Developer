@@ -29,7 +29,7 @@ class AuthService {
             throw new QueryError({ error: result.error, tags: ['AuthService', 'verifyRefreshToken'] });
         }
 
-        if (!result.rows.length) {
+        if (!result.rowCount) {
             throw new InvariantError('Refresh token tidak valid');
         }
     }

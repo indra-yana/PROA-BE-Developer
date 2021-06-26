@@ -21,7 +21,7 @@ class UsersService {
             values: [id, username, hashedPassword, fullname],
         });
 
-        if (!result.rows.length) {
+        if (!result.rowCount) {
             throw new InvariantError('User gagal ditambahkan');
         }
 
@@ -34,7 +34,7 @@ class UsersService {
             values: [userId],
         });
 
-        if (!result.rows.length) {
+        if (!result.rowCount) {
             throw new NotFoundError('User tidak ditemukan');
         }
 
@@ -47,7 +47,7 @@ class UsersService {
             values: [username],
         });
 
-        if (result.rows.length > 0) {
+        if (result.rowCount > 0) {
             throw new InvariantError('Gagal menambahkan user. Username sudah digunakan');
         }
     }
