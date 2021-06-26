@@ -4,6 +4,7 @@ const bcrypt = require('bcrypt');
 const InvariantError = require('../../exceptions/InvariantError');
 const NotFoundError = require('../../exceptions/NotFoundError');
 const AuthError = require('../../exceptions/AuthError');
+const QueryError = require('../../exceptions/QueryError');
 
 class UsersService {
 
@@ -20,7 +21,11 @@ class UsersService {
         const result = await this._pool.query({
             text: 'INSERT INTO users VALUES($1, $2, $3, $4) RETURNING id',
             values: [id, username, hashedPassword, fullname],
-        });
+        }).catch(error => ({ error }));
+
+        if (result.error) {
+            throw new QueryError({ error: result.error, tags: ['UsersService', 'addUser'] });
+        }
 
         if (!result.rows.length) {
             throw new InvariantError('User gagal ditambahkan');
@@ -33,7 +38,11 @@ class UsersService {
         const result = await this._pool.query({
             text: 'SELECT id, username, fullname FROM users WHERE id = $1',
             values: [userId],
-        });
+        }).catch(error => ({ error }));
+
+        if (result.error) {
+            throw new QueryError({ error: result.error, tags: ['UsersService', 'getUserById'] });
+        }
 
         if (!result.rows.length) {
             throw new NotFoundError('User tidak ditemukan');
@@ -46,7 +55,11 @@ class UsersService {
         const result = await this._pool.query({
             text: 'SELECT username FROM users WHERE username = $1',
             values: [username],
-        });
+        }).catch(error => ({ error }));
+
+        if (result.error) {
+            throw new QueryError({ error: result.error, tags: ['UsersService', 'verifyNewUsername'] });
+        }
 
         if (result.rows.length > 0) {
             throw new InvariantError('Gagal menambahkan user. Username sudah digunakan');
@@ -57,7 +70,11 @@ class UsersService {
         const result = await this._pool.query({
             text: 'SELECT id, password FROM users WHERE username = $1',
             values: [username],
-        });
+        }).catch(error => ({ error }));
+
+        if (result.error) {
+            throw new QueryError({ error: result.error, tags: ['UsersService', 'verifyUserCredential'] });
+        }
 
         if (!result.rows.length) {
             throw new AuthError('Kredensial yang Anda berikan salah');

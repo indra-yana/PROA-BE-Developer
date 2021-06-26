@@ -3,6 +3,7 @@ const { nanoid } = require('nanoid');
 const { mapNotesDBToModel } = require('../../utils');
 const InvariantError = require('../../exceptions/InvariantError');
 const NotFoundError = require('../../exceptions/NotFoundError');
+const QueryError = require('../../exceptions/QueryError');
 
 class NotesService {
 
@@ -18,7 +19,11 @@ class NotesService {
         const result = await this._pool.query({
             text: 'INSERT INTO notes VALUES($1, $2, $3, $4, $5, $6) RETURNING id',
             values: [id, title, body, tags, createdAt, updatedAt],
-        });
+        }).catch(error => ({ error }));
+
+        if (result.error) {
+            throw new QueryError({ error: result.error, tags: ['NotesService', 'addNote'] });
+        }
 
         if (!result.rows[0].id) {
             throw new InvariantError('Catatan gagal ditambahkan');
@@ -28,7 +33,11 @@ class NotesService {
     }
 
     async getNotes() {
-        const result = await this._pool.query('SELECT * FROM notes');
+        const result = await this._pool.query('SELECT * FROM notes').catch(error => ({ error }));
+
+        if (result.error) {
+            throw new QueryError({ error: result.error, tags: ['NotesService', 'getNotes'] });
+        }
 
         return result.rows.map(mapNotesDBToModel);
     }
@@ -37,7 +46,11 @@ class NotesService {
         const result = await this._pool.query({
             text: 'SELECT * FROM notes WHERE id = $1',
             values: [id],
-        });
+        }).catch(error => ({ error }));
+
+        if (result.error) {
+            throw new QueryError({ error: result.error, tags: ['NotesService', 'getNoteById'] });
+        }
 
         if (!result.rows.length) {
             throw new NotFoundError('Catatan tidak ditemukan');
@@ -51,7 +64,11 @@ class NotesService {
         const result = await this._pool.query({
             text: 'UPDATE notes SET title = $1, body = $2, tags = $3, updated_at = $4 WHERE id = $5 RETURNING id',
             values: [title, body, tags, updatedAt, id],
-        });
+        }).catch(error => ({ error }));
+
+        if (result.error) {
+            throw new QueryError({ error: result.error, tags: ['NotesService', 'editNoteById'] });
+        }
 
         if (!result.rows.length) {
             throw new NotFoundError('Gagal memperbarui catatan. Id tidak ditemukan');
@@ -62,7 +79,11 @@ class NotesService {
         const result = await this._pool.query({
             text: 'DELETE FROM notes WHERE id = $1 RETURNING id',
             values: [id],
-        });
+        }).catch(error => ({ error }));
+
+        if (result.error) {
+            throw new QueryError({ error: result.error, tags: ['NotesService', 'deleteNoteById'] });
+        }
 
         if (!result.rows.length) {
             throw new NotFoundError('Catatan gagal dihapus, Id tidak ditemukan');

@@ -28,9 +28,13 @@ class NotesHandler {
     }
 
     async getNotesHandler(request, h) {
-        const notes = await this._service.getNotes();
+        try {
+            const notes = await this._service.getNotes();
 
-        return responseSuccess(h, 'Catatan berhasil didapatkan', { notes });
+            return responseSuccess(h, 'Catatan berhasil didapatkan', { notes });   
+        } catch (error) {
+            return responseError(h, error);
+        }
     }
 
     async getNoteByIdHandler(request, h) {
