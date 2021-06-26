@@ -1,4 +1,4 @@
-const ClientError = require('../../exceptions/ClientError');
+const { responseSuccess, responseError } = require('../../utils');
 
 class NotesHandler {
 
@@ -20,28 +20,17 @@ class NotesHandler {
             const { title = 'Untitled', body, tags } = request.payload;
             const noteId = await this._service.addNote({ title, body, tags });
 
-            return h.response({
-                status: 'success',
-                message: 'Catatan berhasil ditambahkan',
-                data: {
-                    noteId,
-                },
-            }).code(201);
+            return responseSuccess(h, 'Catatan berhasil ditambahkan', { noteId }, 201);
         } catch (error) {
-            return handleError(error, h);
+            return responseError(error, h);
         }
 
     }
 
-    async getNotesHandler() {
+    async getNotesHandler(request, h) {
         const notes = await this._service.getNotes();
 
-        return {
-            status: 'success',
-            data: {
-                notes,
-            }
-        }
+        return responseSuccess(h, 'Catatan berhasil didapatkan', { notes });
     }
 
     async getNoteByIdHandler(request, h) {
@@ -49,14 +38,9 @@ class NotesHandler {
             const { id } = request.params;
             const note = await this._service.getNoteById(id);
 
-            return {
-                status: 'success',
-                data: {
-                    note,
-                }
-            }
+            return responseSuccess(h, 'Catatan berhasil didapatkan', { note });
         } catch (error) {
-            return handleError(error, h);
+            return responseError(error, h);
         }
 
     }
@@ -68,12 +52,9 @@ class NotesHandler {
             const { id } = request.params;
             await this._service.editNoteById(id, request.payload);
 
-            return {
-                status: 'success',
-                message: 'Catatan berhasil diperbarui',
-            };
+            return responseSuccess(h, 'Catatan berhasil diperbarui');
         } catch (error) {
-            return handleError(error, h);
+            return responseError(error, h);
         }
     }
 
@@ -83,32 +64,13 @@ class NotesHandler {
 
             await this._service.deleteNoteById(id);
 
-            return {
-                status: 'success',
-                message: 'Catatan berhasil dihapus',
-            };
+            return responseSuccess(h, 'Catatan berhasil dihapus');
         } catch (error) {
-            return handleError(error, h);
+            return responseError(error, h);
         }
 
     }
 
-}
-
-const handleError = (error, h) => {
-    if (error instanceof ClientError) {
-        return h.response({
-            status: 'fail',
-            message: error.message,
-        }).code(error.statusCode);
-    }
-
-    // Server Error!
-    console.error(error);
-    return h.response({
-        status: 'error',
-        message: 'Maaf, terjadi kegagalan pada server kami.',
-    }).code(500);
 }
 
 module.exports = NotesHandler;

@@ -1,4 +1,4 @@
-const ClientError = require('../../exceptions/ClientError');
+const { responseSuccess, responseError } = require('../../utils');
 
 class UsersHandler {
 
@@ -16,17 +16,10 @@ class UsersHandler {
 
             const { username, password, fullname } = request.payload;
             const userId = await this._service.addUser({ username, password, fullname });
-            
-            return h.response({
-                status: 'success',
-                message: 'User berhasil ditambahkan',
-                data: {
-                    userId,
-                },
-            }).code(201);
 
+            return responseSuccess(h, 'User berhasil ditambahkan', { userId }, 201);
         } catch (error) {
-            return handleError(error, h);
+            return responseError(error, h);
         }
     }
 
@@ -35,33 +28,12 @@ class UsersHandler {
             const { id } = request.params;
             const user = await this._service.getUserById(id);
 
-            return {
-                status: 'success',
-                data: {
-                    user,
-                }
-            }
+            return responseSuccess(h, 'User berhasil didapatkan', { user });
         } catch (error) {
-            return handleError(error, h);
+            return responseError(error, h);
         }
     }
 
-}
-
-const handleError = (error, h) => {
-    if (error instanceof ClientError) {
-        return h.response({
-            status: 'fail',
-            message: error.message,
-        }).code(error.statusCode);
-    }
-
-    // Server Error!
-    console.error(error);
-    return h.response({
-        status: 'error',
-        message: 'Maaf, terjadi kegagalan pada server kami.',
-    }).code(500);
 }
 
 module.exports = UsersHandler;
