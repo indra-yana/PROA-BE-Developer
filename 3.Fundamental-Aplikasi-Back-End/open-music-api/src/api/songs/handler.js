@@ -1,4 +1,4 @@
-const ClientError = require('../../exceptions/ClientError');
+const { responseSuccess, responseError } = require('../../utils');
 
 class SongsHandler {
 
@@ -20,28 +20,22 @@ class SongsHandler {
             const { title = 'Untitled', year, performer, genre, duration } = request.payload;
             const songId = await this._service.addSong({ title, year, performer, genre, duration });
 
-            return h.response({
-                status: 'success',
-                message: 'Lagu berhasil ditambahkan',
-                data: {
-                    songId,
-                },
-            }).code(201);
+            return responseSuccess(h, 'Lagu berhasil ditambahkan', { songId }, 201);
         } catch (error) {
-            return handleError(error, h);
+            return responseError(h, error);
         }
 
     }
 
-    async getSongsHandler() {
-        const songs = await this._service.getSongs();
+    async getSongsHandler(request, h) {
+        try {
+            const songs = await this._service.getSongs();
 
-        return {
-            status: 'success',
-            data: {
-                songs,
-            }
+            return responseSuccess(h, 'Lagu berhasil didapatkan', { songs });  
+        } catch (error) {
+            return responseError(h, error);
         }
+        
     }
 
     async getSongByIdHandler(request, h) {
@@ -49,14 +43,9 @@ class SongsHandler {
             const { id } = request.params;
             const song = await this._service.getSongById(id);
 
-            return {
-                status: 'success',
-                data: {
-                    song,
-                }
-            }
+            return responseSuccess(h, 'Lagu berhasil didapatkan', { song });
         } catch (error) {
-            return handleError(error, h);
+            return responseError(h, error);
         }
 
     }
@@ -68,12 +57,9 @@ class SongsHandler {
             const { id } = request.params;
             await this._service.editSongById(id, request.payload);
 
-            return {
-                status: 'success',
-                message: 'Lagu berhasil diperbarui',
-            };
+            return responseSuccess(h, 'Lagu berhasil diperbarui');
         } catch (error) {
-            return handleError(error, h);
+            return responseError(h, error);
         }
     }
 
@@ -83,32 +69,13 @@ class SongsHandler {
 
             await this._service.deleteSongById(id);
 
-            return {
-                status: 'success',
-                message: 'Lagu berhasil dihapus',
-            };
+            return responseSuccess(h, 'Lagu berhasil dihapus');
         } catch (error) {
-            return handleError(error, h);
+            return responseError(h, error);
         }
 
     }
 
-}
-
-const handleError = (error, h) => {
-    if (error instanceof ClientError) {
-        return h.response({
-            status: 'fail',
-            message: error.message,
-        }).code(error.statusCode);
-    }
-
-    // Server Error!
-    console.error(error);
-    return h.response({
-        status: 'error',
-        message: 'Maaf, terjadi kegagalan pada server kami.',
-    }).code(500);
 }
 
 module.exports = SongsHandler;
