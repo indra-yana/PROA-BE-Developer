@@ -45,7 +45,7 @@ class UsersService {
         }
 
         if (!result.rowCount) {
-            throw new NotFoundError('User tidak ditemukan');
+            throw new NotFoundError({ message: 'User tidak ditemukan', tags: ['UsersService', 'getUserById']});
         }
 
         return result.rows[0];

@@ -53,7 +53,7 @@ class NotesService {
         }
 
         if (!result.rowCount) {
-            throw new NotFoundError('Catatan tidak ditemukan');
+            throw new NotFoundError({ message: 'Catatan tidak ditemukan', tags: ['NotesService', 'getNoteById'] });
         }
 
         return result.rows.map(mapNotesDBToModel)[0];
@@ -71,7 +71,7 @@ class NotesService {
         }
 
         if (!result.rowCount) {
-            throw new NotFoundError('Gagal memperbarui catatan. Id tidak ditemukan');
+            throw new NotFoundError({ message: 'Gagal memperbarui catatan. Id tidak ditemukan', tags: ['NotesService', 'editNoteById']});
         }
     }
 
@@ -86,7 +86,7 @@ class NotesService {
         }
 
         if (!result.rowCount) {
-            throw new NotFoundError('Catatan gagal dihapus, Id tidak ditemukan');
+            throw new NotFoundError({ message: 'Catatan gagal dihapus, Id tidak ditemukan', tags: ['NotesService', 'deleteNoteById']});
         }
     }
 
