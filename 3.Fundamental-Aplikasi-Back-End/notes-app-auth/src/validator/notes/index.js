@@ -6,7 +6,11 @@ const NotesValidator = {
         const validationResult = NotePayloadSchema.validate(payload);
         
         if (validationResult.error) {
-            throw new InvariantError(validationResult.error.message);
+            throw new InvariantError({ 
+                message: 'Gagal validasi', 
+                error: validationResult.error, 
+                tags: ['NotesValidator', 'validateNotePayload'], 
+            });
         }
     }
 }

@@ -15,6 +15,7 @@ class UsersService {
     async addUser({ username, password, fullname }) {
         await this.verifyNewUsername(username);
         
+        const tags = ['UsersService', 'addUser'];
         const id = `user-${nanoid(16)}`;
         const hashedPassword = await bcrypt.hash(password, 10);
 
@@ -24,56 +25,59 @@ class UsersService {
         }).catch(error => ({ error }));
 
         if (result.error) {
-            throw new QueryError({ error: result.error, tags: ['UsersService', 'addUser'] });
+            throw new QueryError({ error: result.error, tags });
         }
 
         if (!result.rowCount) {
-            throw new InvariantError('User gagal ditambahkan');
+            throw new InvariantError({ message: 'User gagal ditambahkan', tags });
         }
 
         return result.rows[0].id;
     }
 
     async getUserById(userId) {
+        const tags = ['UsersService', 'getUserById'];
         const result = await this._pool.query({
             text: 'SELECT id, username, fullname FROM users WHERE id = $1',
             values: [userId],
         }).catch(error => ({ error }));
 
         if (result.error) {
-            throw new QueryError({ error: result.error, tags: ['UsersService', 'getUserById'] });
+            throw new QueryError({ error: result.error, tags });
         }
 
         if (!result.rowCount) {
-            throw new NotFoundError({ message: 'User tidak ditemukan', tags: ['UsersService', 'getUserById']});
+            throw new NotFoundError({ message: 'User tidak ditemukan', tags });
         }
 
         return result.rows[0];
     }
 
     async verifyNewUsername(username) {
+        const tags = ['UsersService', 'verifyNewUsername'];
         const result = await this._pool.query({
             text: 'SELECT username FROM users WHERE username = $1',
             values: [username],
         }).catch(error => ({ error }));
 
         if (result.error) {
-            throw new QueryError({ error: result.error, tags: ['UsersService', 'verifyNewUsername'] });
+            throw new QueryError({ error: result.error, tags });
         }
 
         if (result.rowCount > 0) {
-            throw new InvariantError('Gagal menambahkan user. Username sudah digunakan');
+            throw new InvariantError({ message: 'Gagal menambahkan user. Username sudah digunakan', tags });
         }
     }
 
     async verifyUserCredential(username, password) {
+        const tags = ['UsersService', 'verifyUserCredential'];
         const result = await this._pool.query({
             text: 'SELECT id, password FROM users WHERE username = $1',
             values: [username],
         }).catch(error => ({ error }));
 
         if (result.error) {
-            throw new QueryError({ error: result.error, tags: ['UsersService', 'verifyUserCredential'] });
+            throw new QueryError({ error: result.error, tags });
         }
 
         if (!result.rowCount) {

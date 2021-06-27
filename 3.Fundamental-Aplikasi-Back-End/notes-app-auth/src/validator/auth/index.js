@@ -10,21 +10,33 @@ const AuthValidator = {
         const validationResult = PostAuthPayloadSchema.validate(payload);
         
         if (validationResult.error) {
-            throw new InvariantError(validationResult.error.message);
+            throw new InvariantError({ 
+                message: 'Gagal validasi', 
+                error: validationResult.error, 
+                tags: ['AuthValidator', 'validatePostAuthPayload'], 
+            });
         }
     },
     validatePutAuthPayload: (payload) => {
         const validationResult = PutAuthPayloadSchema.validate(payload);
 
         if (validationResult.error) {
-            throw new InvariantError(validationResult.error.message);
+            throw new InvariantError({ 
+                message: 'Gagal validasi', 
+                error: validationResult.error, 
+                tags: ['AuthValidator', 'validatePutAuthPayload'], 
+            });
         }
     },
     validateDeleteAuthPayload: (payload) => {
         const validationResult = DeleteAuthPayloadSchema.validate(payload);
 
         if (validationResult.error) {
-            throw new InvariantError(validationResult.error.message);
+            throw new InvariantError({ 
+                message: 'Gagal validasi', 
+                error: validationResult.error, 
+                tags: ['AuthValidator', 'validateDeleteAuthPayload'], 
+            });
         }
     },
 }

@@ -15,6 +15,7 @@ class NotesService {
         const id = nanoid(16);
         const createdAt = new Date().toISOString();
         const updatedAt = createdAt;
+        const logTags = ['NotesService', 'addNote'];
 
         const result = await this._pool.query({
             text: 'INSERT INTO notes VALUES($1, $2, $3, $4, $5, $6) RETURNING id',
@@ -22,44 +23,47 @@ class NotesService {
         }).catch(error => ({ error }));
 
         if (result.error) {
-            throw new QueryError({ error: result.error, tags: ['NotesService', 'addNote'] });
+            throw new QueryError({ error: result.error, tags: logTags });
         }
 
         if (!result.rows[0].id) {
-            throw new InvariantError('Catatan gagal ditambahkan');
+            throw new InvariantError({ message: 'Catatan gagal ditambahkan', tags: logTags });
         }
 
         return result.rows[0].id;
     }
 
     async getNotes() {
+        const tags = ['NotesService', 'getNotes'];
         const result = await this._pool.query('SELECT * FROM notes').catch(error => ({ error }));
 
         if (result.error) {
-            throw new QueryError({ error: result.error, tags: ['NotesService', 'getNotes'] });
+            throw new QueryError({ error: result.error, tags });
         }
 
         return result.rows.map(mapNotesDBToModel);
     }
 
     async getNoteById(id) {
+        const tags = ['NotesService', 'getNoteById'];
         const result = await this._pool.query({
             text: 'SELECT * FROM notes WHERE id = $1',
             values: [id],
         }).catch(error => ({ error }));
 
         if (result.error) {
-            throw new QueryError({ error: result.error, tags: ['NotesService', 'getNoteById'] });
+            throw new QueryError({ error: result.error, tags });
         }
 
         if (!result.rowCount) {
-            throw new NotFoundError({ message: 'Catatan tidak ditemukan', tags: ['NotesService', 'getNoteById'] });
+            throw new NotFoundError({ message: 'Catatan tidak ditemukan', tags });
         }
 
         return result.rows.map(mapNotesDBToModel)[0];
     }
 
     async editNoteById(id, { title, body, tags }) {
+        const logTags = ['NotesService', 'editNoteById'];
         const updatedAt = new Date().toISOString();
         const result = await this._pool.query({
             text: 'UPDATE notes SET title = $1, body = $2, tags = $3, updated_at = $4 WHERE id = $5 RETURNING id',
@@ -67,26 +71,27 @@ class NotesService {
         }).catch(error => ({ error }));
 
         if (result.error) {
-            throw new QueryError({ error: result.error, tags: ['NotesService', 'editNoteById'] });
+            throw new QueryError({ error: result.error, tags: logTags });
         }
 
         if (!result.rowCount) {
-            throw new NotFoundError({ message: 'Gagal memperbarui catatan. Id tidak ditemukan', tags: ['NotesService', 'editNoteById']});
+            throw new NotFoundError({ message: 'Gagal memperbarui catatan. Id tidak ditemukan', tags: logTags });
         }
     }
 
     async deleteNoteById(id) {
+        const tags = ['NotesService', 'deleteNoteById', 'Test'];
         const result = await this._pool.query({
             text: 'DELETE FROM notes WHERE id = $1 RETURNING id',
             values: [id],
         }).catch(error => ({ error }));
 
         if (result.error) {
-            throw new QueryError({ error: result.error, tags: ['NotesService', 'deleteNoteById'] });
+            throw new QueryError({ error: result.error, tags });
         }
 
         if (!result.rowCount) {
-            throw new NotFoundError({ message: 'Catatan gagal dihapus, Id tidak ditemukan', tags: ['NotesService', 'deleteNoteById']});
+            throw new NotFoundError({ message: 'Catatan gagal dihapus, Id tidak ditemukan', tags });
         }
     }
 

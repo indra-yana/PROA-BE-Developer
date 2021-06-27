@@ -18,7 +18,7 @@ const TokenManager = {
 
             return payload;
         } catch (error) {
-            throw new InvariantError('Refresh token tidak valid');
+            throw new InvariantError({ message: 'Refresh token tidak valid', error, tags: ['TokenManager', 'verifyRefreshToken'] });
         }
       
     }
