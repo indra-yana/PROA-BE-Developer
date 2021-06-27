@@ -81,14 +81,15 @@ class UsersService {
         }
 
         if (!result.rowCount) {
-            throw new AuthError('Kredensial yang Anda berikan salah');
+            throw new AuthError({ message: 'Kredensial yang Anda berikan salah', tags });
         }
 
         const { id, password: hashedPassword } = result.rows[0];
         const match = await bcrypt.compare(password, hashedPassword);
 
         if (!match) {
-            throw new AuthError('Kredensial yang Anda berikan salah');
+            tags.push('Password tidak cocok');
+            throw new AuthError({ message: 'Kredensial yang Anda berikan salah', tags });
         }
 
         return id;
