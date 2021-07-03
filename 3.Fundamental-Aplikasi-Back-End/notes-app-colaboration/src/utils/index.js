@@ -7,7 +7,8 @@ const mapNotesDBToModel = ({
     body,
     tags,
     created_at,
-    updated_at
+    updated_at,
+    username,
 }) => ({
     id,
     title,
@@ -15,6 +16,7 @@ const mapNotesDBToModel = ({
     tags,
     createdAt: created_at,
     updatedAt: updated_at,
+    username,
 });
 
 const responseSuccess = (h, message, params = {}, statusCode = 200) => {

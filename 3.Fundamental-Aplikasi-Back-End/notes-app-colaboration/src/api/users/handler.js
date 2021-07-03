@@ -8,6 +8,7 @@ class UsersHandler {
 
         this.postUserHandler = this.postUserHandler.bind(this);
         this.getUserByIdHandler = this.getUserByIdHandler.bind(this);
+        this.getUsersByUsernameHandler = this.getUsersByUsernameHandler.bind(this);
     }
 
     async postUserHandler(request, h) {
@@ -29,6 +30,17 @@ class UsersHandler {
             const user = await this._service.getUserById(id);
 
             return responseSuccess(h, 'User berhasil didapatkan', { user });
+        } catch (error) {
+            return responseError(h, error);
+        }
+    }
+
+    async getUsersByUsernameHandler(request, h) {
+        try {
+            const { username = '' } = request.query;
+            const users = await this._service.getUsersByUsername(username);
+            
+            return responseSuccess(h, 'User berhasil didapatkan', { users });
         } catch (error) {
             return responseError(h, error);
         }

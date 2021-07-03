@@ -53,6 +53,19 @@ class UsersService {
         return result.rows[0];
     }
 
+    async getUsersByUsername(username) {
+        const result = await this._pool.query({
+            text: 'SELECT id, username, fullname FROM users WHERE username LIKE $1',
+            values: [`%${username}%`],
+        }).catch(error => ({ error }));
+
+        if (result.error) {
+            throw new QueryError({ error: result.error, tags });
+        }
+
+        return result.rows;
+    }
+
     async verifyNewUsername(username) {
         const tags = ['UsersService', 'verifyNewUsername'];
         const result = await this._pool.query({
