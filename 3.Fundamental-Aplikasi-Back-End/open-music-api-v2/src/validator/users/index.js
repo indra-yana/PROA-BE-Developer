@@ -9,7 +9,7 @@ const UsersValidator = {
             throw new InvariantError({ 
                 message: 'Gagal validasi', 
                 error: validationResult.error, 
-                tags: ['NotesValidator', 'validateNotePayload'], 
+                tags: ['UsersValidator', 'validateUserPayload'], 
             });
         }
     }

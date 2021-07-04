@@ -36,6 +36,17 @@ const mapSongsDBToModel2 = ({
     performer,
 });
 
+const mapPlaylistsDBToModel = ({
+    id, 
+    name, 
+    owner,
+    username,
+}) => ({
+    id, 
+    name, 
+    username,
+});
+
 const responseSuccess = (h, message, params = {}, statusCode = 200) => {
     return h.response({
         status: 'success',
@@ -68,6 +79,7 @@ const responseError = (h, error) => {
 module.exports = { 
     mapSongsDBToModel, 
     mapSongsDBToModel2,
+    mapPlaylistsDBToModel,
     responseSuccess,
     responseError,
 };

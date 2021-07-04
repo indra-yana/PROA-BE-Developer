@@ -19,6 +19,11 @@ const AuthService = require('./services/postgres/AuthService');
 const TokenManager = require('./tokenize/TokenManager');
 const AuthValidator = require('./validator/auth');
 
+// Playlist Plugin
+const playlistsPlugin = require('./api/playlists');
+const PlaylistsService = require('./services/postgres/PlaylistsService');
+const PlaylistsValidator = require('./validator/playlists');
+
 const init = async() => {
     const server = Hapi.server({
         host: process.env.APP_HOST,
@@ -34,6 +39,7 @@ const init = async() => {
     const songsService = new SongsService();
     const usersService = new UsersService();
     const authService = new AuthService();
+    const playlistsService = new PlaylistsService();
 
     // registrasi plugin eksternal
     await server.register([
@@ -43,7 +49,7 @@ const init = async() => {
     ]);
 
     // Mendefinisikan strategi authentikasi jwt
-    server.auth.strategy('notesapp_jwt', 'jwt', {
+    server.auth.strategy('openmusic_jwt', 'jwt', {
         keys: process.env.ACCESS_TOKEN_KEY,
         verify: {
             aud: false,
@@ -84,6 +90,13 @@ const init = async() => {
                 validator: AuthValidator,
             }
         }, 
+        {
+            plugin: playlistsPlugin,
+            options: {
+                service: playlistsService,
+                validator: PlaylistsValidator,
+            }
+        },
     ]);
 
     await server.start();
