@@ -34,7 +34,9 @@ class SongsService {
 
     async getSongs() {
         const tags = ['SongsService', 'getSongs'];
-        const result = await this._pool.query('SELECT id, title, performer FROM songs').catch(error => ({ error }));
+        const result = await this._pool.query({
+            text: 'SELECT id, title, performer FROM songs'
+        }).catch(error => ({ error }));
 
         if (result.error) {
             throw new QueryError({ error: result.error, tags });
