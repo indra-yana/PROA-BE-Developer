@@ -45,7 +45,6 @@ class PlaylistsSongsService {
             throw new QueryError({ error: result.error, tags });
         }
 
-        // console.log(result.rows);
         return result.rows.map(mapSongsDBToModel2);
     }
 

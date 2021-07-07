@@ -72,7 +72,6 @@ class PlaylistsService {
 
     async editPlaylistById(id, { name }) {
         const tags = ['PlaylistsService', 'editPlaylistById'];
-        const updatedAt = new Date().toISOString();
         const result = await this._pool.query({
             text: `UPDATE playlists SET name = $1
                    WHERE id = $2 RETURNING id`,
