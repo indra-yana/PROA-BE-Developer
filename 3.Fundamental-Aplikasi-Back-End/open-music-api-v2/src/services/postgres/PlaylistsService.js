@@ -8,8 +8,9 @@ const AuthorizationError = require('../../exceptions/AuthorizationError');
 
 class PlaylistsService {
 
-    constructor() {
+    constructor(collaborationService) {
         this._pool = new Pool();
+        this._collaborationService = collaborationService;
     }
 
     async addPlaylist({ name, owner }) {
@@ -37,7 +38,8 @@ class PlaylistsService {
         const result = await this._pool.query({
             text: `SELECT playlists.*, users.username FROM playlists
                    LEFT JOIN users ON users.id = playlists.owner
-                   WHERE playlists.owner = $1 OR users.id = $1`,
+                   LEFT JOIN collaborations ON collaborations.playlist_id = playlists.id
+                   WHERE playlists.owner = $1 OR users.id = $1 OR collaborations.user_id = $1`,
             values: [owner],
         }).catch(error => ({ error }));
 
@@ -124,7 +126,6 @@ class PlaylistsService {
         }
     }
 
-    // TODO: @verifyPlaylistAccess
     async verifyPlaylistAccess(playlistId, userId) {
         try {
             await this.verifyPlaylistOwner(playlistId, userId);
@@ -134,7 +135,7 @@ class PlaylistsService {
             }
 
             try {
-                // await this._collaborationService.verifyCollaborator(playlistId, userId);
+                await this._collaborationService.verifyCollaborator(playlistId, userId);
             } catch {
                 throw error;
             }

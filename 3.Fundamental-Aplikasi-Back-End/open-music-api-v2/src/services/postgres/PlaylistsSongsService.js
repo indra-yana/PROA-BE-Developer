@@ -35,7 +35,8 @@ class PlaylistsSongsService {
         const result = await this._pool.query({
             text: `SELECT songs.id, songs.title, songs.performer FROM songs
                    LEFT JOIN playlists_songs ON playlists_songs.song_id = songs.id
-                   WHERE playlists_songs.playlist_id = $1
+                   LEFT JOIN collaborations ON collaborations.playlist_id = playlists_songs.playlist_id
+                   WHERE playlists_songs.playlist_id = $1 OR collaborations.playlist_id = $1
                    GROUP BY songs.id`,
             values: [playlistId],
         }).catch(error => ({ error }));

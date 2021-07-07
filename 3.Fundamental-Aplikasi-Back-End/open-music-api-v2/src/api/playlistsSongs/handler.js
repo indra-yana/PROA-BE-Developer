@@ -20,7 +20,7 @@ class PlaylistsSongsHandler {
             const { songId } = request.payload;
             const { id: credentialId } = request.auth.credentials;
 
-            await this._playlistsService.verifyPlaylistOwner(playlistId, credentialId);
+            await this._playlistsService.verifyPlaylistAccess(playlistId, credentialId);
             const playlistSongId = await this._playlistsSongsService.addSongToPlaylist(playlistId, songId);
 
             return responseSuccess(h, 'Lagu berhasil ditambahkan ke playlist', { playlistSongId }, 201);
@@ -35,7 +35,7 @@ class PlaylistsSongsHandler {
             const { id: credentialId } = request.auth.credentials;
             const { playlistId } = request.params;
 
-            await this._playlistsService.verifyPlaylistOwner(playlistId, credentialId);
+            await this._playlistsService.verifyPlaylistAccess(playlistId, credentialId);
             const songs = await this._playlistsSongsService.getSongsOnPlaylist(playlistId);
 
             return responseSuccess(h, 'Playlist berhasil didapatkan', { songs });   
@@ -50,7 +50,7 @@ class PlaylistsSongsHandler {
             const { playlistId } = request.params;
             const { songId } = request.payload;
             
-            await this._playlistsService.verifyPlaylistOwner(playlistId, credentialId);
+            await this._playlistsService.verifyPlaylistAccess(playlistId, credentialId);
             await this._playlistsSongsService.deleteSongFromPlaylist(playlistId, songId);
 
             return responseSuccess(h, 'Lagu berhasil dihapus dari playlist');
