@@ -36,6 +36,9 @@ const uploadsPlugin = require('./api/uploads');
 const StorageService = require('./services/storage/StorageService');
 const UploadsValidator = require('./validator/uploads');
 
+// cache
+const CacheService = require('./services/redis/CacheService');
+
 const init = async() => {
     const server = Hapi.server({
         host: process.env.APP_HOST,
@@ -48,8 +51,9 @@ const init = async() => {
     });
 
     // Init Service Instance
-    const collabService = new CollaborationsService();
-    const notesService = new NotesService(collabService);
+    const cacheService = new CacheService();
+    const collabService = new CollaborationsService(cacheService);
+    const notesService = new NotesService(collabService, cacheService);
     const usersService = new UsersService();
     const authService = new AuthService();
     const storageService = new StorageService(path.resolve(__dirname, 'api/uploads/file/images'));

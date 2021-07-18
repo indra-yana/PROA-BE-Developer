@@ -5,8 +5,9 @@ const QueryError = require('../../exceptions/QueryError');
 
 class CollaborationsService {
 
-    constructor() {
+    constructor(cacheService) {
         this._pool = new Pool();
+        this._cacheService = cacheService;
     }
 
     async addCollaboration(noteId, userId) {
@@ -26,6 +27,8 @@ class CollaborationsService {
             throw new InvariantError({ message: 'Kolaborasi gagal ditambahkan', tags });
         }
 
+        await this._cacheService.delete(`notes:${userId}`);
+
         return result.rows[0].id;
     }
 
@@ -43,6 +46,8 @@ class CollaborationsService {
         if (!result.rowCount) {
             throw new InvariantError({ message: 'Kolaborasi gagal dihapus', tags });
         }
+
+        await this._cacheService.delete(`notes:${userId}`);
     }
 
     async verifyCollaborator(noteId, userId) {
