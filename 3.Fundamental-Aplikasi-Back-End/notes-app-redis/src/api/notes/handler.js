@@ -33,8 +33,9 @@ class NotesHandler {
         try {
             const { id: credentialId } = request.auth.credentials;
             const notes = await this._service.getNotes(credentialId);
-
-            return responseSuccess(h, 'Catatan berhasil didapatkan', { notes });   
+            const { isFromCache = false } = notes;
+            
+            return responseSuccess(h, 'Catatan berhasil didapatkan', { notes, isFromCache });   
         } catch (error) {
             return responseError(h, error);
         }

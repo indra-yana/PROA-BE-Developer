@@ -41,9 +41,12 @@ class NotesService {
     async getNotes(owner) {
         try {
             // Mendapatkan catatan dari cache
-            const result = await this._cacheService.get(`notes:${owner}`);
+            let result = await this._cacheService.get(`notes:${owner}`);
 
-            return JSON.parse(result);
+            result = JSON.parse(result);
+            result.isFromCache = true;
+
+            return result;
         } catch (error) {
             const tags = ['NotesService', 'getNotes'];
             const result = await this._pool.query({
