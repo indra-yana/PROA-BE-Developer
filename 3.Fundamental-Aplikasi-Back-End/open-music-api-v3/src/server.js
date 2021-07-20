@@ -1,7 +1,9 @@
 const dotenv = require('dotenv').config();
+const path = require('path');
 
 const Hapi = require('@hapi/hapi');
 const Jwt = require('@hapi/jwt');
+const Inert = require('@hapi/inert');
 
 // Songs Plugin
 const songsPlugin = require('./api/songs');
@@ -34,6 +36,11 @@ const collaborationPlugin = require('./api/collaborations');
 const CollaborationsService = require('./services/postgres/CollaborationsService');
 const CollaborationsValidator = require('./validator/collaborations');
 
+// uploads
+const uploadsPlugin = require('./api/uploads');
+const StorageService = require('./services/storage/StorageService');
+const UploadsValidator = require('./validator/uploads');
+
 const init = async() => {
     const server = Hapi.server({
         host: process.env.APP_HOST,
@@ -52,11 +59,15 @@ const init = async() => {
     const authService = new AuthService();
     const playlistsService = new PlaylistsService(collaborationsService);
     const playlistsSongsService = new PlaylistsSongsService();
+    const storageService = new StorageService(path.resolve(__dirname, 'api/uploads/file/images'));
 
     // registrasi plugin eksternal
     await server.register([
         {
             plugin: Jwt,
+        },
+        {
+            plugin: Inert,
         },
     ]);
 
@@ -124,6 +135,13 @@ const init = async() => {
                 playlistsService,
                 validator: CollaborationsValidator,
             }
+        },
+        {
+            plugin: uploadsPlugin,
+            options: {
+              service: storageService,
+              validator: UploadsValidator,
+            },
         },
     ]);
 
