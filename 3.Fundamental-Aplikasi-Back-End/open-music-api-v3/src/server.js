@@ -41,6 +41,9 @@ const uploadsPlugin = require('./api/uploads');
 const StorageService = require('./services/storage/StorageService');
 const UploadsValidator = require('./validator/uploads');
 
+// cache
+const CacheService = require('./services/redis/CacheService');
+
 const init = async() => {
     const server = Hapi.server({
         host: process.env.APP_HOST,
@@ -53,12 +56,13 @@ const init = async() => {
     });
 
     // Init Service Instance
+    const cacheService = new CacheService();
     const collaborationsService = new CollaborationsService();
     const songsService = new SongsService();
     const usersService = new UsersService();
     const authService = new AuthService();
     const playlistsService = new PlaylistsService(collaborationsService);
-    const playlistsSongsService = new PlaylistsSongsService();
+    const playlistsSongsService = new PlaylistsSongsService(cacheService);
     const storageService = new StorageService(path.resolve(__dirname, 'api/uploads/file/images'));
 
     // registrasi plugin eksternal

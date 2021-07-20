@@ -37,8 +37,9 @@ class PlaylistsSongsHandler {
 
             await this._playlistsService.verifyPlaylistAccess(playlistId, credentialId);
             const songs = await this._playlistsSongsService.getSongsOnPlaylist(playlistId);
+            const { isFromCache = false } = songs;
 
-            return responseSuccess(h, 'Playlist berhasil didapatkan', { songs });   
+            return responseSuccess(h, 'Playlist berhasil didapatkan', { songs, isFromCache });   
         } catch (error) {
             return responseError(h, error);
         }
